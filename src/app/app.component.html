@@ -15,7 +15,11 @@
               <p *ngIf="studentForm.get('name').errors.maxlength">
                 It should not exceed 10 char
               </p>
+              <p *ngIf="studentForm.get('name').errors.alphabetError">
+                Alphabets only
+              </p>
             </div>
+            <div>{{ studentForm.get("name").errors | json }}</div>
           </div>
         </div>
         <div class="row">
@@ -58,7 +62,7 @@
           </div>
         </div>
 
-        <ng-container>
+        <ng-container formArrayName="skills">
           <div
             [formGroupName]="i"
             class="row"

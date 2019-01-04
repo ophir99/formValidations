@@ -1,7 +1,5 @@
 import { Component } from "@angular/core";
 import {
-  FromGroup,
-  FromControl,
   FormArray,
   FormGroup,
   FormControl,
@@ -20,19 +18,37 @@ export class AppComponent {
 
   constructor(private fBuilder: FormBuilder) {
     this.createStudentForm();
-    this.createSkillsFG(1);
+    this.createSkillsFG(10);
+    this.studentForm.get("name").valueChanges.subscribe(
+      val => {
+        const pattern = /^[A-Za-z]+$/;
+        if (pattern.test(val)) {
+          return;
+        } else {
+          console.error("Wrong Val");
+          this.studentForm
+            .get("name")
+            .setValue(val.substring(0, val.length - 1));
+        }
+      },
+      () => {},
+      () => {}
+    );
   }
 
   createStudentForm() {
     // this.studentForm = new FormGroup({
-    //   name: new FormControl("Angular", ),
+    //   name: new FormControl("Angular", []),
     //   email: new FormControl(),
     //   educationDetails: new FormArray([]),
     //   skills: new FormArray([])
     // });
 
     this.studentForm = this.fBuilder.group({
-      name: ["", [Validators.required, Validators.maxLength(10)]],
+      name: [
+        "",
+        [Validators.required, Validators.maxLength(10), this.alphabetsonly]
+      ],
       email: [],
       educationDetails: this.fBuilder.array([]),
       skills: this.fBuilder.array([])
@@ -70,6 +86,18 @@ export class AppComponent {
     });
     for (let i = 0; i < length; i++) {
       this.studentForm.get("skills").push(skillFG);
+    }
+  }
+
+  alphabetsonly(myFC) {
+    const pattern = /^[A-Za-z]+$/;
+
+    if (pattern.test(myFC.value)) {
+      return null;
+    } else {
+      return {
+        alphabetError: true
+      };
     }
   }
 }
