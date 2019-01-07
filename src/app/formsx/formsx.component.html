@@ -1,0 +1,31 @@
+<table [formGroup]="customerForm">
+  <tbody>
+    <tr>
+      <td><input type="text" formControlName="name" /></td>
+    </tr>
+    <tr>
+      <td><input type="text" formControlName="email" /></td>
+    </tr>
+    <tr>
+      <td><input type="text" formControlName="cc" /></td>
+      <td
+        *ngIf="
+          (customerForm.get('cc').invalid && customerForm.get('cc').touched) ||
+          (customerForm.get('cc').invalid && customerForm.get('cc').dirty)
+        "
+      >
+        <p *ngIf="customerForm.get('cc').errors.required">
+          This field is required
+        </p>
+        <p *ngIf="customerForm.get('cc').errors.creditCardError">
+          This should be a valid credit card
+        </p>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+{{ customerForm.value | json }}
+
+<hr />
+{{ customerForm.get("cc").errors | json }}
